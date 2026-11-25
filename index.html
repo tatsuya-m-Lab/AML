@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AML実践 CBT問題アプリ（全50問）</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --primary-soft: #eff6ff;
+      --success: #15803d;
+      --success-soft: #f0fdf4;
+      --success-border: #86efac;
+      --danger: #b91c1c;
+      --danger-soft: #fef2f2;
+      --danger-border: #fca5a5;
+      --warn: #b45309;
+      --warn-soft: #fffbeb;
+      --warn-border: #fcd34d;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #fff;
+      padding: 18px 24px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.15);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+    }
+
+    .header-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-pill {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--surface-alt);
+      border-color: #cbd5e1;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    button.btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    button.btn-ghost-light {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+
+    button.btn-ghost-light:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 22px auto 48px;
+      padding: 0 18px;
+    }
+
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    select, label.toggle-check {
+      font-family: inherit;
+      font-size: 0.86rem;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    label.toggle-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 290px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .q-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .q-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .q-num {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+
+    .q-cat {
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .flag-btn.flagged {
+      background: var(--warn-soft);
+      border-color: var(--warn-border);
+      color: var(--warn);
+    }
+
+    .q-stem {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0 0 18px;
+      white-space: pre-line;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      text-align: left;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .choice-key {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--surface-alt);
+      border: 1px solid #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .choice-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .choice-btn.correct {
+      border-color: var(--success);
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .choice-btn.correct .choice-key {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+
+    .choice-btn.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .choice-btn.incorrect .choice-key {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: #fff;
+    }
+
+    .explanation-box {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-alt);
+    }
+
+    .explanation-box.is-correct {
+      background: var(--success-soft);
+      border-color: var(--success-border);
+    }
+
+    .explanation-box.is-incorrect {
+      background: var(--danger-soft);
+      border-color: var(--danger-border);
+    }
+
+    .exp-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exp-body {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .q-nav {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .palette-card h2 {
+      margin: 0 0 10px;
+      font-size: 0.98rem;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .pal-btn {
+      padding: 6px 0;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      font-variant-numeric: tabular-nums;
+      position: relative;
+    }
+
+    .pal-btn.current {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+      font-weight: 700;
+    }
+
+    .pal-btn.p-correct {
+      background: var(--success-soft);
+      border-color: var(--success-border);
+      color: var(--success);
+    }
+
+    .pal-btn.p-incorrect {
+      background: var(--danger-soft);
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
+
+    .pal-btn.p-flagged::after {
+      content: "★";
+      position: absolute;
+      top: 1px;
+      right: 3px;
+      font-size: 0.62rem;
+      color: var(--warn);
+    }
+
+    .stats-mini {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.84rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.9rem;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+    }
+
+    .summary-table th {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <h1>AML実践 CBT問題アプリ（全50問）</h1>
+        <p>顧客管理（CDD/EDD）・取引モニタリング・疑わしい取引の届出（STR）・金融制裁・内部管理態勢</p>
+      </div>
+      <div class="header-controls">
+        <span class="badge-pill" id="scoreBadge">正答: 0 / 0</span>
+        <span class="badge-pill" id="timerBadge">経過: 00:00</span>
+        <button class="btn-ghost-light" id="toggleSummaryBtn">成績サマリー</button>
+        <button class="btn-ghost-light" id="resetBtn">履歴リセット</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="toolbar">
+      <div class="filter-group">
+        <select id="categoryFilter" aria-label="分野選択">
+          <option value="ALL">全分野（50問）</option>
+          <option value="顧客管理（CDD/EDD）">顧客管理（CDD/EDD）</option>
+          <option value="取引モニタリング・分析">取引モニタリング・分析</option>
+          <option value="疑わしい取引の届出（STR）">疑わしい取引の届出（STR）</option>
+          <option value="金融制裁・海外送金・暗号資産">金融制裁・海外送金・暗号資産</option>
+          <option value="内部管理態勢・3線ディフェンス">内部管理態勢・3線ディフェンス</option>
+        </select>
+
+        <select id="subsetFilter" aria-label="出題対象">
+          <option value="ALL">すべての対象問題</option>
+          <option value="WRONG">過去に間違えた問題のみ</option>
+          <option value="FLAGGED">フラグ付き問題のみ</option>
+          <option value="UNANSWERED">未解答の問題のみ</option>
+        </select>
+
+        <button id="shuffleBtn">出題順シャッフル</button>
+      </div>
+
+      <div class="filter-group">
+        <label class="toggle-check">
+          <input type="checkbox" id="autoRevealCheck" checked />
+          解答後に解説を表示
+        </label>
+        <label class="toggle-check">
+          <input type="checkbox" id="shuffleChoicesCheck" />
+          選択肢シャッフル
+        </label>
+      </div>
+    </div>
+
+    <div id="summaryView" class="card" style="display:none; margin-bottom:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+        <h2 style="margin:0;">分野別 学習成績サマリー</h2>
+        <div>
+          <button class="btn-primary" id="retryWrongBtn">間違えた問題だけ再挑戦</button>
+          <button id="closeSummaryBtn">問題画面に戻る</button>
+        </div>
+      </div>
+      <div id="summaryContent"></div>
+    </div>
+
+    <div class="main-grid" id="quizGrid">
+      <section class="card" id="questionCard"></section>
+
+      <aside class="card palette-card">
+        <h2>問題ナビゲーション</h2>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--success-soft); border:1px solid var(--success-border);"></i>正解</span>
+          <span><i class="dot" style="background:var(--danger-soft); border:1px solid var(--danger-border);"></i>不正解</span>
+          <span><i class="dot" style="background:var(--warn-soft); border:1px solid var(--warn-border);"></i>★要復習</span>
+        </div>
+        <div class="palette-grid" id="paletteGrid"></div>
+        <div class="stats-mini" id="miniStats"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      // 1. 顧客管理（CDD/EDD）（10問）
+      {
+        id: 1,
+        category: "顧客管理（CDD/EDD）",
+        stem: "法人顧客との新規取引開始時における実質的支配者の確認について、実務上最も適切な対応はどれか。",
+        choices: [
+          "登記簿謄本（履歴事項全部証明書）の記載だけで実質的支配者の特定を完了とする",
+          "議決権の25%超を直接・間接に保有する自然人の有無を確認し、該当者がいない場合は事業経営を実質的に支配する自然人を確認する",
+          "代表取締役本人の口頭申告のみで実質的支配者を登録し、裏付け資料は求めない",
+          "上場企業の連結子会社であれば、親会社の上場区分に関わらず実質的支配者の確認を一切省略できる"
+        ],
+        answer: 1,
+        explanation: "法人顧客では、議決権等の25%超を直接・間接に保有する自然人（または事業経営を実質的に支配する自然人）を確認することが基本です。上場会社等は例外規定の対象となりますが、確認プロセスと根拠資料の整合性が重要です。"
+      },
+      {
+        id: 2,
+        category: "顧客管理（CDD/EDD）",
+        stem: "強化された顧客管理（EDD）が必要となる典型的なケースとして、最も不適切なものはどれか。",
+        choices: [
+          "顧客または実質的支配者が外国PEPs（重要な公的地位にある者）に該当する場合",
+          "犯罪収益移転防止法上の特定取引に該当し、なりすましや虚偽申告の疑いがある場合",
+          "FATFが協力を要請する高リスク国・地域と関連する取引や送金が含まれる場合",
+          "給与振込口座を長年利用している国内居住の個人顧客が、通常の生活費決済を行う場合"
+        ],
+        answer: 3,
+        explanation: "外国PEPs、高リスク国・地域関連、疑義のある取引等はEDDの対象となります。通常の国内居住者の生活費決済は通常管理（CDD）の範囲であり、一律にEDDを要するものではありません。"
+      },
+      {
+        id: 3,
+        category: "顧客管理（CDD/EDD）",
+        stem: "外国PEPs（Politically Exposed Persons）に該当する顧客への対応として、実務上求められる措置はどれか。",
+        choices: [
+          "取引開始時の厳格な本人確認に加え、資産・収入の状況確認や定期的な顧客情報更新などリスクに応じた措置を講じる",
+          "外国PEPsであっても国内の公職経験者と同等に扱い、追加確認は行わない",
+          "外国PEPsに該当した時点で、理由の説明なくすべての既存口座を即時解約しなければならない",
+          "確認対象は本人のみであり、家族や実質的支配者が外国PEPsである場合は対象外となる"
+        ],
+        answer: 0,
+        explanation: "外国PEPsはマネロン・腐敗資金洗浄リスクが高いため、厳格な確認、資産・収入の状況確認、継続的顧客管理（情報更新・モニタリング強化）をリスクに応じて実施します。本人だけでなく家族や実質的支配者も確認対象となります。"
+      },
+      {
+        id: 4,
+        category: "顧客管理（CDD/EDD）",
+        stem: "継続的顧客管理（Ongoing CDD）における顧客情報の定期・随時更新の意義として、最も適切なものはどれか。",
+        choices: [
+          "口座開設時に一度確認すれば、顧客の職業・事業内容や取引実態が変わっても再確認は不要である",
+          "顧客の属性・事業内容・リスク評価の変化を把握し、取引モニタリングの前提となる顧客プロファイルを最新化するため",
+          "休眠口座を強制的に解約するための事務手続きとしてのみ実施される",
+          "システム上のバッチ処理だけで完結し、営業店や担当者の実態把握は不要である"
+        ],
+        answer: 1,
+        explanation: "顧客の職業、事業内容、実質的支配者、資金源等は時間とともに変化します。継続的顧客管理により顧客リスク評価とモニタリング基準を最新状態に保つことがAML実務の要諦です。"
+      },
+      {
+        id: 5,
+        category: "顧客管理（CDD/EDD）",
+        stem: "非対面取引（インターネットバンキングやアプリ申込等）における本人確認で留意すべき実務上のポイントはどれか。",
+        choices: [
+          "なりすましや撮影画像の改ざん・AI加工リスクを踏まえ、確認方式の要件と内部統制ルールを厳格に遵守する",
+          "非対面取引は対面よりリスクが低いため、本人確認書類の有効期限や住所一致の確認は省略できる",
+          "本人確認書類の画像が不鮮明でも、電話番号が通じれば確認完了としてよい",
+          "初回振込上限額を無制限に設定したうえで、後から本人確認を行えばよい"
+        ],
+        answer: 0,
+        explanation: "非対面チャネルはなりすましや不正取得アカウントの温床になりやすいため、法令・ガイドラインに沿った本人確認手法の適用と、初期取引制限や不審な端末・IP検知等の対策が不可欠です。"
+      },
+      {
+        id: 6,
+        category: "顧客管理（CDD/EDD）",
+        stem: "顧客のリスク格付（リスクスコアリング）において、総合評価を引き上げる要因となりにくいものはどれか。",
+        choices: [
+          "現金集約型ビジネスや換金性の高い資産を扱う業態であること",
+          "国境を越えた資金移動や複雑・不透明な法人ストラクチャーを有すること",
+          "登録された職業・事業内容および取引パターンが安定しており、説明と整合していること",
+          "過去に疑わしい取引の届出対象となった経緯や不自然な取引照会があること"
+        ],
+        answer: 2,
+        explanation: "業態特性（現金多用・換金性）、地理的リスク、複雑なストラクチャー、過去の不審取引履歴はリスクを高める要因です。申告内容と実態が整合し安定している場合はリスクを押し上げる要因になりにくいです。"
+      },
+      {
+        id: 7,
+        category: "顧客管理（CDD/EDD）",
+        stem: "法人顧客の「事業内容・取引目的・資金源」を確認する実務上の目的として、最も適切なものはどれか。",
+        choices: [
+          "営業担当者のノルマ達成度を計算するため",
+          "実際の入出金規模や取引相手先が、申告された正当な事業活動と合理的に整合しているかを判断するため",
+          "法人税の確定申告書を金融機関が代理作成するため",
+          "金利優遇の可否を顧客の好みで決めるため"
+        ],
+        answer: 1,
+        explanation: "事業内容や取引目的・資金源を確認するのは、将来の取引が「その顧客のビジネス実態として自然か（不自然な資金の流れではないか）」を見極めるための基準を作るためです。"
+      },
+      {
+        id: 8,
+        category: "顧客管理（CDD/EDD）",
+        stem: "顧客から必要な確認資料の提出を求めても正当な理由なく拒否され、不自然な点が見られる場合の対応として適切なものはどれか。",
+        choices: [
+          "取引制限や契約解除等の社内規程に基づく措置を検討するとともに、疑わしい取引の該当性を検討する",
+          "顧客の機嫌を損ねないよう、確認を中断して通常どおり高額送金を受け付ける",
+          "担当者個人の判断で、資料なしで「確認済み」とシステム入力する",
+          "理由を問わず、直ちに顧客へ「当局に通報した」と連絡する"
+        ],
+        answer: 0,
+        explanation: "合理的な説明や資料提出の拒否は典型的なレッドフラッグの一つです。社内規程に基づく取引制限等の検討とあわせて、疑わしい取引の届出（STR）の要否を慎重に検討します。"
+      },
+      {
+        id: 9,
+        category: "顧客管理（CDD/EDD）",
+        stem: "NPO法人・一般社団法人・財団法人などの非営利団体（NPO等）の顧客管理で特に注意すべき視点はどれか。",
+        choices: [
+          "営利目的ではないため、資金の流れや代表者・活動実態の確認は一切不要である",
+          "テロ資金供与や資金流用のリスクを踏まえ、活動実態、資金の調達・使途、実質的な意思決定者を確認する",
+          "設立登記があれば、海外送金の目的や受取人を問わずに即座に実行してよい",
+          "個人口座と同一の基準のみを適用し、団体のガバナンス確認は不要である"
+        ],
+        answer: 1,
+        explanation: "非営利団体は寄付や助成金など資金の出入りが多様で、テロ資金供与等に悪用されるリスクが指摘されています。活動実態や資金使途、支配・運営実態の確認が重要です。"
+      },
+      {
+        id: 10,
+        category: "顧客管理（CDD/EDD）",
+        stem: "顧客リスク評価の見直しトリガー（再評価の契機）として適切でないものはどれか。",
+        choices: [
+          "短期間での多額の入出金や従来と異なるパターンの取引が発生したとき",
+          "顧客情報更新やレビューで、職業・事業内容・実質的支配者の変更が判明したとき",
+          "制裁リストや注意喚起情報に顧客・関連人物がヒット・関連する可能性が生じたとき",
+          "顧客が一度もログインせず、取引も残高も一切変化がないとき"
+        ],
+        answer: 3,
+        explanation: "不審な取引発生、属性・支配構造の変化、制裁・リスク情報の更新等はリスク評価を見直す契機になります。変化が全くない状態が直ちにリスク上昇のトリガーとなるわけではありません。"
+      },
+
+      // 2. 取引モニタリング・分析（10問）
+      {
+        id: 11,
+        category: "取引モニタリング・分析",
+        stem: "「スマ―フィング（構造化取引・分割取引）」の説明として最も適切なものはどれか。",
+        choices: [
+          "報告基準額やモニタリング検知閾値を下回るよう、金額や回数を分割して入出金を行う手口",
+          "複数の銀行口座間で同一金額を毎日定額で自動振替する給与天引きの手口",
+          "外貨預金を満期まで保有し、利息を受け取る一般的な資産運用",
+          "クレジットカードの利用明細を毎月一括で口座振替する決済方法"
+        ],
+        answer: 0,
+        explanation: "スマ―フィング（ストラクチャリング）は、記録保存や検知閾値・届出基準を回避するために、取引を小口化・分割したり複数口座・複数人に分散させたりする典型的なマネロン手口です。"
+      },
+      {
+        id: 12,
+        category: "取引モニタリング・分析",
+        stem: "取引モニタリングシステムでアラートが発生した際の初動対応として、最も適切なものはどれか。",
+        choices: [
+          "件数が多いときは、内容を確認せずにまとめて「問題なし（クローズ）」として処理する",
+          "顧客属性、過去の取引履歴、入出金チャネル・相手先、取引目的の整合性を確認し、調査記録を残す",
+          "アラートが出た瞬間に、調査を行わず顧客へ電話して「マネロンで疑われている」と告げる",
+          "システムのアラート閾値を下げれば手間が減るため、無断で閾値を引き上げる"
+        ],
+        answer: 1,
+        explanation: "アラートは「疑わしい取引の端緒」であり、顧客プロファイルや過去の取引推移、経済的合理性・取引目的との整合性を調査・分析し、判断根拠を記録することが重要です。"
+      },
+      {
+        id: 13,
+        category: "取引モニタリング・分析",
+        stem: "「休眠口座・長期間動きのなかった口座」が急に活性化し、多額の入金直後に即座に出金・送金された場合の評価として最も適切なものはどれか。",
+        choices: [
+          "長期間使われていなかったため、AML上の懸念は低いと判断できる",
+          "口座乗っ取りや不正口座利用・資金洗浄（パススルー・資金滞留なし）の兆候として注意深く精査する必要がある",
+          "出金先が国内であれば、入金元を確認する必要はない",
+          "残高がゼロになればリスクもゼロになるため、調査は不要である"
+        ],
+        answer: 1,
+        explanation: "休眠口座の急な稼働や、短時間での入出金（資金の滞留が少ない通過型・パススルー取引）は、不正利用やマネー・ローンダリングの代表的な兆候です。"
+      },
+      {
+        id: 14,
+        category: "取引モニタリング・分析",
+        stem: "シナリオベース監視と機械学習・行動分析（AI/アノマリー検知）を組み合わせる利点として、最も適切なものはどれか。",
+        choices: [
+          "AIを導入すれば、ルール設計や人手による精査・ガバナンスは一切不要になる",
+          "既知の典型手口（閾値超え・急激な増加等）を確実に捉えつつ、従来のルールでは捉えにくい複合的・非定型な異常パターンも検知しやすくなる",
+          "誤検知（フォルス・ポジティブ）がゼロになり、すべてのアラートが直ちに犯罪と確定する",
+          "顧客データの正確性が低くても、分析結果の信頼性は変わらない"
+        ],
+        answer: 1,
+        explanation: "ルール/シナリオは既知の要件・手口を網羅的に捉えるのに適し、行動分析・機械学習は複合的な特徴や逸脱パターンの発見に役立ちます。両者の補完と適切なチューニング・検証が重要です。"
+      },
+      {
+        id: 15,
+        category: "取引モニタリング・分析",
+        stem: "「経済的合理性や事業実態に乏しい取引」の例として最も適切なものはどれか。",
+        choices: [
+          "小売業の顧客が、売上入金の後に仕入先へ支払いを行い、利益や諸経費を差し引いて残高が推移している",
+          "事業実態が不明な法人口座に多額の資金が複数先から集まり、実質的な商流の裏付けなく即座に別口座へ分散送金されている",
+          "給与所得者が毎月給与を受け取り、家賃や光熱費、食費を支払っている",
+          "個人顧客が定期預金の満期資金を普通預金へ振り替えている"
+        ],
+        answer: 1,
+        explanation: "事業実態や商流の裏付けが乏しいにもかかわらず多額の資金が集約・分散される動き（いわゆる資金の出し入れ・通過型）は、マネー・ローンダリングや詐欺被害金の移転等で警戒すべきパターンです。"
+      },
+      {
+        id: 16,
+        category: "取引モニタリング・分析",
+        stem: "アラートの「フォルス・ポジティブ（誤検知・正当取引の検知）」が多発している場合の適切な改善アプローチはどれか。",
+        choices: [
+          "調査工数を減らすため、監視対象口座を全口座の1割に限定する",
+          "検知の根拠となるリスク要因を検証したうえで、顧客セグメントや取引特性に応じた閾値・除外条件のチューニングを統制のもとで行う",
+          "検知されたアラートをすべて自動承認する設定に変更する",
+          "モニタリングのログ保存期間を1日に短縮する"
+        ],
+        answer: 1,
+        explanation: "過剰な誤検知は調査品質の低下を招きますが、安易な監視縮小はリスク見逃しにつながります。リスク評価に基づく閾値調整やセグメント細分化を検証・承認プロセスを経て行うことが重要です。"
+      },
+      {
+        id: 17,
+        category: "取引モニタリング・分析",
+        stem: "取引モニタリングにおける「顧客セグメント別・チャネル別の分析」が重要である理由はどれか。",
+        choices: [
+          "個人と法人、あるいは窓口取引とネットバンキングでは「通常の取引パターン」が異なるため",
+          "システム処理速度を速めるためだけに、すべての顧客を同じ基準で扱うべきだから",
+          "非対面チャネルは常に安全であり、監視対象外とするため",
+          "セグメントを分けると法令遵守の責任が免除されるため"
+        ],
+        answer: 0,
+        explanation: "顧客属性（個人・中小法人・大企業・非営利等）や利用チャネルによって自然な金額帯・頻度・相手先は異なります。属性やチャネルを踏まえた基準設計が有効な検知につながります。"
+      },
+      {
+        id: 18,
+        category: "取引モニタリング・分析",
+        stem: "複数の口座や名義間で資金が短期間に循環・移動する「レイヤリング（資金の複雑化・偽装）」の狙いとして最も適切なものはどれか。",
+        choices: [
+          "資金の最終的な出所（犯罪収益等）と現在の所在との結びつきを断ち切り、追跡を困難にすること",
+          "振込手数料を最大化して金融機関の収益に貢献すること",
+          "預金保険制度の付保対象額を正確に計算すること",
+          "税務署への提出書類を簡素化すること"
+        ],
+        answer: 0,
+        explanation: "レイヤリングは、複雑な送金・振替・資産変換を重ねることで、資金の起源を隠蔽し、捜査やモニタリングによる追跡を難しくする段階です。"
+      },
+      {
+        id: 19,
+        category: "取引モニタリング・分析",
+        stem: "顧客から取引目的や資金の出所について質問した際、不自然な応答が見られる例として最も適切なものはどれか。",
+        choices: [
+          "請求書や契約書の提示を求めると、曖昧な理由を繰り返したり、質問の意図をそらしたりする",
+          "通常の商取引について、取引先名や決済条件を具体的に説明できる",
+          "相続資金について、遺産分割協議書や相続関連資料の整合的な説明ができる",
+          "不動産売却代金について、売買契約書や決済明細と金額が一致している"
+        ],
+        answer: 0,
+        explanation: "合理的な説明ができない、話が二転三転する、裏付け資料の提示を頑なに避けるといった対応は、実務上重要な警戒サイン（レッドフラッグ）です。"
+      },
+      {
+        id: 20,
+        category: "取引モニタリング・分析",
+        stem: "モニタリング調査において「点」の取引だけでなく「線（一定期間の推移・関連取引）」で見ることが重要な理由はどれか。",
+        choices: [
+          "1回ごとの金額が小さくても、短期間の累積や一連の入出金流れを見ることで不自然なパターンが浮かび上がるため",
+          "1回あたりの取引金額が1円でもあれば、すべて犯罪収益とみなされるため",
+          "過去の取引履歴は監視対象に含めないルールになっているため",
+          "期間を長くするとシステムが停止するため"
+        ],
+        answer: 0,
+        explanation: "分割入金や連続送金などは、単発の取引だけを見ると通常取引に見えても、一定期間の推移や関連口座の動きとあわせて見ることで異常性が把握しやすくなります。"
+      },
+
+      // 3. 疑わしい取引の届出（STR）（10問）
+      {
+        id: 21,
+        category: "疑わしい取引の届出（STR）",
+        stem: "「疑わしい取引の届出（STR：Suspicious Transaction Report）」の判断基準に関して、実務上最も適切な理解はどれか。",
+        choices: [
+          "犯罪行為であることが警察や裁判所によって確定した取引だけを届け出る",
+          "収受した財産が犯罪収益等である疑いがある場合や、顧客の取引が犯罪収益移転等の隠蔽・偽装に利用されている疑いがある場合に、速やかに検討・届出を行う",
+          "顧客から「疑わしい取引として届け出てほしい」と依頼があった場合のみ届け出る",
+          "金額が1,000万円を超える取引以外は、いかなる不審点があっても届出対象外である"
+        ],
+        answer: 1,
+        explanation: "STRは「犯罪の確定」を待つものではなく、調査・分析の結果、犯罪収益等の疑いや隠蔽・偽装の疑いが生じた段階で、法令・社内規程に基づき速やかに届出を行うものです。金額下限も一律ではありません。"
+      },
+      {
+        id: 22,
+        category: "疑わしい取引の届出（STR）",
+        stem: "疑わしい取引の届出を行ったこと、または届出を検討していることに関する「秘匿（ティッピング禁止・漏洩防止）」の原則として正しいものはどれか。",
+        choices: [
+          "顧客や外部関係者、権限のない役職員に届出の有無や調査・届出の事実を漏らしてはならない",
+          "顧客に親切心から「さっき当局に届け出ました」と伝えてよい",
+          "SNSや社外の知人に匿名であれば話しても問題ない",
+          "届出から1週間経過すれば、顧客本人に開示してよい"
+        ],
+        answer: 0,
+        explanation: "届出の事実や調査の端緒が顧客等に伝わると、資金の隠滅・逃避を招くおそれがあります（ティッピングリスク）。厳格な情報管理と秘匿義務の徹底が不可欠です。"
+      },
+      {
+        id: 23,
+        category: "疑わしい取引の届出（STR）",
+        stem: "疑わしい取引の届出書を作成する際、記載内容の質を高めるために重視すべき点はどれか。",
+        choices: [
+          "推測や感想だけで書き、具体的な日付・金額・口座・取引経緯は省略する",
+          "客観的な事実関係（顧客属性、取引の経緯・態様、確認した内容、なぜ不自然・疑わしいと判断したかの理由）を簡潔かつ明確に記載する",
+          "システムが出力した生データをそのまま貼り付けるだけでよい",
+          "不都合な確認結果は意図的に伏せて記載する"
+        ],
+        answer: 1,
+        explanation: "届出書は当局の分析・捜査等に資する重要な情報です。事実と推測を区別しつつ、取引の態様、確認経緯、疑義を抱いた具体的理由を分かりやすく整理して記載します。"
+      },
+      {
+        id: 24,
+        category: "疑わしい取引の届出（STR）",
+        stem: "営業店や現場で「疑わしい取引ではないか」と気づいた職員がとるべき行動として最も適切なものはどれか。",
+        choices: [
+          "自分の勘だけで「たぶん大丈夫だろう」と抱え込み、誰にも報告しない",
+          "速やかに所属長やコンプライアンス・AML担当部署へエスカレーションし、指示に従って記録・確認を行う",
+          "顧客に直接「マネー・ローンダリングですか？」と問い詰める",
+          "関係書類を自己判断で破棄する"
+        ],
+        answer: 1,
+        explanation: "現場の気づきを迅速に統括部署・責任者へ上げることが、組織全体としての早期検知・届出につながります。現場での独断処理や顧客への不適切な追及は避けます。"
+      },
+      {
+        id: 25,
+        category: "疑わしい取引の届出（STR）",
+        stem: "疑わしい取引の届出（STR）を行った後の口座運用・継続取引のあり方として、最も適切なものはどれか。",
+        choices: [
+          "届け出たからといって、自動的に何もせず放置してよいわけではない。リスク評価に基づき、継続監視や取引制限・解約等の措置を適切に検討する",
+          "届け出れば、その後の不正な入出金についても金融機関の責任は一切問われない",
+          "届け出た直後に、必ず全額を現金で顧客に払い戻さなければならない",
+          "届出後はモニタリングを停止してよい"
+        ],
+        answer: 0,
+        explanation: "STRは「届出して終わり」ではなく、その後の取引動向の注視、リスク格付の見直し、必要に応じた取引制限や契約解除などのリスク低減措置を社内規程に沿って検討します。"
+      },
+      {
+        id: 26,
+        category: "疑わしい取引の届出（STR）",
+        stem: "特殊詐欺やSNS型投資・ロマンス詐欺等の被害金が振り込まれた可能性がある口座について、AML/CFT実務の観点からも留意すべき点はどれか。",
+        choices: [
+          "詐欺被害金の資金移動や払い出しは資金洗浄・隠匿行為と密接に関わるため、関連口座の連鎖や出金動向も含め迅速に確認・対応する",
+          "詐欺被害金はAMLとは無関係であるため、AML部門は関与しない",
+          "出金が完了した後は、関連口座の調査は不要である",
+          "被害者からの連絡があるまで、口座の不審な動きは放置してよい"
+        ],
+        answer: 0,
+        explanation: "詐欺等で得られた資金を口座間で移し替えたり引き出したりする行為は、犯罪収益の隠匿・資金洗浄と直結します。被害対応とAML/CFTの双方の観点から迅速な精査・連携が必要です。"
+      },
+      {
+        id: 27,
+        category: "疑わしい取引の届出（STR）",
+        stem: "「届出の要否を迷うケース」における組織的な意思決定のあり方として最も適切なものはどれか。",
+        choices: [
+          "迷ったら必ず「不届出」と決めるルールにする",
+          "担当者一人で抱え込まず、所定の検討プロセス・チェック基準に基づきコンプライアンス/AML部門が客観的・網羅的に評価する",
+          "毎月月末に1件だけまとめて届け出る",
+          "顧客の資産残高が少ない場合は、疑わしくても届け出ない"
+        ],
+        answer: 1,
+        explanation: "判断に迷う案件こそ、客観的な基準と専門部署の関与によって「疑わしさの根拠」と「正当性の根拠」を丁寧に突き合わせ、適切に届出判断を行う必要があります。"
+      },
+      {
+        id: 28,
+        category: "疑わしい取引の届出（STR）",
+        stem: "届出の判断に至らなかった（不届出とした）案件についても、記録を残す実務上の意義はどれか。",
+        choices: [
+          "後から「なぜ届け出なかったのか（どのような確認・検討を行ったのか）」を説明・検証できるようにするため",
+          "記録を残すとシステム容量を圧迫するだけなので、不要である",
+          "不届出の記録は顧客に閲覧させるために作成する",
+          "金融庁への提出義務がある書類だから"
+        ],
+        answer: 0,
+        explanation: "「疑わしい取引に該当しない」と判断した根拠や調査過程を記録しておくことで、内部監査や当局検査、事後検証の際に適切な判断プロセスであったことを説明できます。"
+      },
+      {
+        id: 29,
+        category: "疑わしい取引の届出（STR）",
+        stem: "顧客が窓口で「高額の現金を引き出したいが、理由は言えない。急いでいる」と要求している場合の対応として最も適切なものはどれか。",
+        choices: [
+          "急いでいるため、確認を省いて直ちに全額を渡す",
+          "理由を尋ねつつ、取引目的や資金使途の不自然さ、詐欺被害やマネロン等のリスクを確認し、必要に応じて上長・担当部署へ報告・相談する",
+          "「マネーロンダリングの疑いがあるので出せません」と大声で宣言する",
+          "現金がないと嘘をついて帰らせる"
+        ],
+        answer: 1,
+        explanation: "緊急性を強調して確認を急がせる手口は、詐欺やマネロン等でよく見られます。冷静かつ丁寧な確認と上長・所管部署へのエスカレーションが重要です。"
+      },
+      {
+        id: 30,
+        category: "疑わしい取引の届出（STR）",
+        stem: "疑わしい取引の届出制度がマネー・ローンダリング対策全体において果たす役割として、最も適切なものはどれか。",
+        choices: [
+          "金融機関等が日常の取引接点で把握した不審な資金の流れを当局へ集約し、犯罪収益の解明や資金洗浄ネットワークの把握につなげること",
+          "金融機関が刑事罰を科すための裁判手続きを行うこと",
+          "顧客の信用スコアを一般公開すること",
+          "預金金利を自動的に引き上げること"
+        ],
+        answer: 0,
+        explanation: "金融機関等は資金決済の最前線にいるため、日常取引から得られる不審な兆候を届出として集約することは、金融システムの健全性維持や犯罪対策に不可欠です。"
+      },
+
+      // 4. 金融制裁・海外送金・暗号資産（10問）
+      {
+        id: 31,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "金融制裁（資産凍結等措置・経済制裁）に関するスクリーニング・フィルタリングの基本原則として最も適切なものはどれか。",
+        choices: [
+          "制裁対象者・対象団体・対象国等との関連が疑われる取引は実行せず、速やかに保留・停止して所定の手続・確認を行う",
+          "送金額が少額であれば、制裁リストに一致しても送金を実行してよい",
+          "制裁リストは年に1回だけ確認すれば十分である",
+          "氏名や名称が完全に一文字も違わなければ、類似表記や別名（エイリアス）は一切確認しなくてよい"
+        ],
+        answer: 0,
+        explanation: "制裁違反は極めて重大な法的・レピュテーションリスクを伴います。リスト更新への迅速な対応、表記揺れ・別名も含めたスクリーニング、ヒット時の取引保留と確実な確認が求められます。"
+      },
+      {
+        id: 32,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "国際送金や外貨建て取引において、送金依頼人・受取人・経由銀行等の情報が不十分・不自然な場合に注意すべき理由はどれか。",
+        choices: [
+          "制裁対象者や高リスク主体による資金移動の隠蔽、あるいはマネロン・テロ資金供与に利用されるおそれがあるため",
+          "英文の文字数が長くなると手数料が高くなるため",
+          "時差によって着金が遅れるため",
+          "海外送金では受取人情報は原則不要とされているため"
+        ],
+        answer: 0,
+        explanation: "送金情報の欠落や不自然な記載（いわゆるカバーペイメント等の情報の不透明さ）は、制裁回避や資金洗浄の温床となり得ます。必要な送金情報の確認とリスク評価が重要です。"
+      },
+      {
+        id: 33,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "暗号資産（仮想通貨）の移転における「トラベルルール（Travel Rule）」の主旨として最も適切なものはどれか。",
+        choices: [
+          "旅行代金の決済を暗号資産で行う際の割引制度のこと",
+          "暗号資産交換業者等が暗号資産の移転を行う際、送付元・受取人に関する一定の顧客情報を通知・共有することで、資金移動の透明性を高めマネロン・テロ資金供与を防ぐ仕組み",
+          "海外旅行中に暗号資産を保有することを禁止する規制",
+          "暗号資産の価格変動幅を1日10%以内に制限するルール"
+        ],
+        answer: 1,
+        explanation: "トラベルルールは、銀行の電信送金と同様に、暗号資産移転でも送付人・受取人情報を伴わせることで、不正な資金移転の追跡可能性（トレーサビリティ）を確保する国際基準・法制度です。"
+      },
+      {
+        id: 34,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "セルフホストウォレット（アンホストウォレット：個人が秘密鍵を管理するウォレット）との入出金が関わる取引で留意すべき点はどれか。",
+        choices: [
+          "交換業者を介さない個人管理ウォレットは匿名性・移転の迅速性が高く、マネロン・テロ資金供与リスクが相対的に高いため、リスク評価や確認措置を適切に行う",
+          "個人管理ウォレットはすべて法定通貨と同じ預金保護の対象になる",
+          "秘密鍵を顧客が管理していれば、取引の目的やリスク確認は不要である",
+          "ブロックチェーン上の取引は追跡できないため、確認は一切不要である"
+        ],
+        answer: 0,
+        explanation: "セルフホストウォレットはカストディアンを介さないため、リスク評価や送付元・受取人の実態確認、オンチェーン分析等のリスク低減措置を適切に組み合わせることが重要です。"
+      },
+      {
+        id: 35,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "貿易金融やクロスボーダー取引における「TBML（貿易ベース・マネーロンダリング：Trade-Based Money Laundering）」の特徴として適切なものはどれか。",
+        choices: [
+          "貿易取引のインボイス（請求書）の過大・過小請求、架空の船積書類、実態と合わない貨物単価・数量などを利用して価値を移転する手口",
+          "店頭で外貨両替のみを行うシンプルな取引",
+          "国内の給与振込口座を1つだけ使う取引",
+          "国債を満期まで保有するだけの取引"
+        ],
+        answer: 0,
+        explanation: "TBMLは、貿易書類や商流の複雑さを悪用し、価格操作（過大/過小請求）、重複請求、架空取引などを通じて資金や価値を国境を越えて移動させる手口です。"
+      },
+      {
+        id: 36,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "名称スクリーニングで「制裁対象者と名字が同じ」など、完全一致ではない「潜在的ヒット（疑わしい一致）」が出た場合の適切な対応はどれか。",
+        choices: [
+          "名字が同じだからといって即座に取引を永久停止するのではなく、生年月日・住所・国籍・法人番号・取引背景などの追加情報に基づき、同一人物・同一主体か否かを慎重に確認する",
+          "「名字が違うから大丈夫」と確認せずに即座に取引を通す",
+          "ヒットした時点で、確認せずに顧客の口座残高を没収する",
+          "スクリーニング結果を削除して再実行しない"
+        ],
+        answer: 0,
+        explanation: "同姓同名や類似名称によるフォルス・ヒットは実務上よく発生します。勝手な見過ごしを避けつつ、属性情報や裏付け資料で同一性を正確に判定するプロセスが重要です。"
+      },
+      {
+        id: 37,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "コルレス銀行（コルレス先）との関係管理において重視される観点はどれか。",
+        choices: [
+          "コルレス先のAML/CFT管理態勢や規制遵守状況、業務内容・地理的リスク等を評価し、リスクに応じたデューディリジェンスを実施すること",
+          "一度コルレス契約を結べば、相手の管理態勢が変わっても確認は不要である",
+          "ペーパーカンパニーやダミー銀行（シェルバンク）との取引を優先すること",
+          "送金メッセージの必須項目を省略して手数料を安くすること"
+        ],
+        answer: 0,
+        explanation: "クロスボーダー決済を支えるコルレス銀行業務では、相手金融機関のAML/CFT態勢やリスクプロファイルの把握・継続的評価が不可欠です。"
+      },
+      {
+        id: 38,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "顧客が「海外の取引先へ送金したいが、送金理由を『雑費』と記載してほしい」と依頼してきた場合の対応として最も適切なものはどれか。",
+        choices: [
+          "顧客の希望どおり「雑費」と記載して送金を実行する",
+          "送金の経済的目的や商流・契約関係を確認し、実態と異なる目的記載や不自然な送金には応じず、疑わしい取引の該当性も含め検討する",
+          "金額が10万円未満であれば「雑費」で問題ない",
+          "送金理由欄は空欄のまま送信する"
+        ],
+        answer: 1,
+        explanation: "曖昧・不正確な送金目的の記載は、資金使途の隠蔽や制裁・マネロンリスクにつながるおそれがあります。正当な取引目的と裏付けの確認が必要です。"
+      },
+      {
+        id: 39,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "制裁リストや高リスク国・地域リストの更新管理について、最も適切な運用はどれか。",
+        choices: [
+          "リストの改訂・追加を速やかにシステムおよび業務フローへ反映し、既存顧客・継続取引・新規取引のすべてに漏れなく適用する",
+          "紙のリストを印刷してキャビネットに保管していれば、システム反映は不要である",
+          "新規申込者だけに適用し、既存顧客への再照合は行わない",
+          "更新は四半期に1回まとめて行えばよい"
+        ],
+        answer: 0,
+        explanation: "制裁対象リスト等は随時更新されるため、迅速な反映と、新規・既存・取引時の継続的な照合が欠かせません。"
+      },
+      {
+        id: 40,
+        category: "金融制裁・海外送金・暗号資産",
+        stem: "仮想通貨・暗号資産や新たな決済手段の普及に伴い、AML/CFT担当者が持つべき姿勢として最も適切なものはどれか。",
+        choices: [
+          "新しい技術や決済手段の特性・リスク（匿名性、国境を越えた即時移転、新たな詐欺・洗浄手口等）を継続的に学び、リスク評価と統制を更新し続ける",
+          "従来の銀行窓口業務の知識だけがあれば十分であり、新しい手口は追わなくてよい",
+          "新技術に関わる取引はすべて一律に禁止すればAML対策は完了する",
+          "リスクが顕在化してから初めて勉強を始めればよい"
+        ],
+        answer: 0,
+        explanation: "マネー・ローンダリングやテロ資金供与の手口は技術や決済手段の変化とともに進化します。継続的な学習とリスク評価のアップデートが不可欠です。"
+      },
+
+      // 5. 内部管理態勢・3線ディフェンス（10問）
+      {
+        id: 41,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "AML/CFTにおける「3線ディフェンス（Three Lines of Defense）」の役割分担として最も適切なものはどれか。",
+        choices: [
+          "第1線が営業・業務部門（リスクの保有・一次管理）、第2線がコンプライアンス・リスク管理部門（基準策定・モニタリング・助言・牽制）、第3線が内部監査部門（独立した評価・検証）",
+          "第1線が内部監査部門、第2線が営業店、第3線が顧客自身",
+          "すべての線を営業店長一人が兼務することが最も効率的である",
+          "第2線が存在すれば、第1線や第3線は不要である"
+        ],
+        answer: 0,
+        explanation: "第1線（事業・業務部門）が日々のリスク管理を行い、第2線（AML/CFT・コンプライアンス部門等）が態勢整備・監視・牽制を担い、第3線（内部監査）が独立した立場から実効性を検証します。"
+      },
+      {
+        id: 42,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "AML/CFTにおける「リスクベース・アプローチ（RBA）」の本質として最も適切なものはどれか。",
+        choices: [
+          "すべての顧客・商品・取引に、常に同一かつ一律の厳格さ・手続きを適用すること",
+          "自らが直面するマネロン・テロ資金供与リスクを特定・評価し、リスクが高い領域にはより多くの経営資源と厳格な統制を配分し、低い領域は合理的に対応すること",
+          "コスト削減のために、リスクが高い取引ほど確認を簡略化すること",
+          "リスク評価は一度行えば、経営環境や事業が変わっても見直さないこと"
+        ],
+        answer: 1,
+        explanation: "RBAは、リスクの大小に応じて資源や統制の強弱をメリハリをつけて配分するアプローチです。高リスク領域への重点配分と、定期的・継続的なリスク評価の見直しが重要です。"
+      },
+      {
+        id: 43,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "経営陣（取締役会・経営会議等）のAML/CFT態勢における責務として最も適切なものはどれか。",
+        choices: [
+          "AML/CFTを経営上の重要課題と位置づけ、リスク評価の承認、必要な人員・システム等の資源配分、部門間連携や実効性の監督を主導すること",
+          "現場の窓口事務や個別のアラート精査だけを経営陣がすべて代行すること",
+          "コンプライアンス部門に丸投げし、報告を受けないこと",
+          "コストがかかる対策は原則として承認しないこと"
+        ],
+        answer: 0,
+        explanation: "実効的なAML/CFT態勢は経営陣のコミットメントとガバナンスから始まります。方針決定、資源配分、報告・検証を通じた監督が求められます。"
+      },
+      {
+        id: 44,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "役職員に対するAML/CFT研修・教育を実施する目的として、最も不適切なものはどれか。",
+        choices: [
+          "最新の法改正や手口・レッドフラッグ、社内規程・判断基準を役職員に浸透させること",
+          "「自分たちの業務にもAMLリスクがある」という当事者意識と適切な初動対応力を高めること",
+          "研修を受けたことだけを形式的なアリバイとし、実務での判断やエスカレーションは改善しなくてもよいとすること",
+          "職種や役割（営業、審査、システム、管理部門等）に応じた実践的知識を身につけること"
+        ],
+        answer: 2,
+        explanation: "研修は「受けさせて終わり」ではなく、実務での正しい識別・確認・エスカレーション・記録につながることが重要です。役割に応じた継続的研修が求められます。"
+      },
+      {
+        id: 45,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "内部監査（第3線）がAML/CFT態勢を監査する際の視点として、最も適切なものはどれか。",
+        choices: [
+          "規程やマニュアルが紙（電子ファイル）で整備されているかだけでなく、現場やシステム・モニタリング・届出判断が実際に機能しているか（実効性・整合性）を独立して検証する",
+          "被監査部門の職員に監査結果の書き換えを依頼してよい内容にする",
+          "システムログや調査記録は見ずに、口頭説明だけで監査完了とする",
+          "監査は5年に1回、1時間だけ行えば十分である"
+        ],
+        answer: 0,
+        explanation: "内部監査では、態勢の整備状況（デザイン）と運用状況（オペレーティング・エフェクティブネス）の双方を独立・客観的に検証し、改善につなげることが重要です。"
+      },
+      {
+        id: 46,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "記録保存（本人確認記録・取引記録・調査・届出関連記録等）の実務上の重要性として、最も適切なものはどれか。",
+        choices: [
+          "法令に基づく保存義務を果たすとともに、事後の検証・調査・監査・当局対応において、いつ・誰が・何を根拠に判断したかを追跡可能にするため",
+          "保存期間が過ぎる前でも、担当者のデスクが狭くなったら随時廃棄してよい",
+          "紙媒体で保管していれば、紛失や水濡れがあっても問題ない",
+          "疑わしい取引の調査メモは、すべて破棄するルールにすべきである"
+        ],
+        answer: 0,
+        explanation: "適切な記録保存と検索・閲覧可能な管理は、法令遵守だけでなく、監査証跡（Audit Trail）の確保や内部検証の基盤となります。"
+      },
+      {
+        id: 47,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "新商品・新サービス・新規チャネル・新システムの導入時に、AML/CFTの観点から事前に行うべき対応はどれか。",
+        choices: [
+          "リリース後に問題が起きてからAML担当者に相談する",
+          "導入前の企画・設計段階から、新たなマネロン・テロ資金供与リスクを評価し、必要な確認・モニタリング・統制を組み込む",
+          "新しいサービスであれば、従来のAML規程は適用されない",
+          "システム開発が完了していれば、業務フローや例外処理の検討は不要である"
+        ],
+        answer: 1,
+        explanation: "新商品・新サービス・新技術は新たな悪用隙を生みやすいため、提供開始前のリスク評価と統制設計（By Design）が重要です。"
+      },
+      {
+        id: 48,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "営業目標や業績評価とAML/CFTのバランスを取るうえで、組織として留意すべき点はどれか。",
+        choices: [
+          "口座獲得や送金件数などの営業実績だけを重視し、CDD不備や不審取引の見過ごしを看過する評価制度にしない",
+          "コンプライアンス違反が起きても、営業成績が高ければすべて不問とする",
+          "AML/CFT担当者の評価を、疑わしい取引の届出件数「ゼロ」に設定する",
+          "営業部門とコンプライアンス部門は完全に断絶し、情報共有を行わない"
+        ],
+        answer: 0,
+        explanation: "過度な業績偏重や不適切なKPI設定は、確認の省略や不審点の隠蔽を誘発するおそれがあります。健全なリスクカルチャーと適切な評価・牽制の仕組みが重要です。"
+      },
+      {
+        id: 49,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "グループ会社や海外拠点・委託先を含むAML/CFT態勢管理において重要な考え方はどれか。",
+        choices: [
+          "グループ全体のリスク特性や各法域の法令・規制を踏まえつつ、一貫したグループ方針・基準のもとで情報共有や管理・監督を行う",
+          "子会社や業務委託先は別法人なので、マネロン対策の状況を把握しなくてよい",
+          "海外拠点では日本のルールだけを押し付け、現地の法規制は考慮しなくてよい",
+          "業務委託先に任せた工程のAMLリスクは、委託元には一切帰属しない"
+        ],
+        answer: 0,
+        explanation: "グループ・委託先を通じた資金移動や業務分担がある場合、グループベースでのリスク把握と統制、各法域の法令遵守、委託先管理が不可欠です。"
+      },
+      {
+        id: 50,
+        category: "内部管理態勢・3線ディフェンス",
+        stem: "AML/CFT態勢を「形骸化させない」ために継続的に取り組むべきこととして、最も適切なものはどれか。",
+        choices: [
+          "定期的なリスク評価（WRA：全社的リスク評価等）の更新、アラート・調査品質のモニタリング、監査や外部環境変化を踏まえた規程・業務・システムのPDCAを回す",
+          "一度マニュアルを作成したら、10年間は内容を一切見直さない",
+          "問題が起きても「前例がない」として改善を見送る",
+          "形だけのチェックリストにチェックを入れる作業自体を目的化する"
+        ],
+        answer: 0,
+        explanation: "AML/CFTは静的なチェック作業ではなく、リスク評価・統制・監視・検証・改善を継続的に回すダイナミックな管理態勢です。"
+      }
+    ];
+
+    const STORAGE_KEY = "aml_cbt_50_state_v1";
+
+    let state = {
+      answers: {},       // { [qId]: { selected: number, isCorrect: boolean } }
+      flagged: {},       // { [qId]: boolean }
+      order: QUESTIONS.map(q => q.id),
+      currentIdx: 0,
+      categoryFilter: "ALL",
+      subsetFilter: "ALL",
+      autoReveal: true,
+      shuffleChoices: false,
+      choiceMaps: {},    // { [qId]: [0,1,2,3] }
+      elapsedSec: 0
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = {
+            ...state,
+            ...parsed,
+            answers: parsed.answers || {},
+            flagged: parsed.flagged || {},
+            choiceMaps: parsed.choiceMaps || {}
+          };
+          if (!Array.isArray(state.order) || state.order.length !== QUESTIONS.length) {
+            state.order = QUESTIONS.map(q => q.id);
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to load state:", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn("Failed to save state:", e);
+      }
+    }
+
+    function getFilteredIds() {
+      return state.order.filter(id => {
+        const q = QUESTIONS.find(item => item.id === id);
+        if (!q) return false;
+        if (state.categoryFilter !== "ALL" && q.category !== state.categoryFilter) {
+          return false;
+        }
+        const ans = state.answers[id];
+        const isFlagged = !!state.flagged[id];
+        if (state.subsetFilter === "WRONG") {
+          return ans && !ans.isCorrect;
+        }
+        if (state.subsetFilter === "FLAGGED") {
+          return isFlagged;
+        }
+        if (state.subsetFilter === "UNANSWERED") {
+          return !ans;
+        }
+        return true;
+      });
+    }
+
+    function getChoiceMap(q) {
+      if (!state.shuffleChoices) {
+        return [0, 1, 2, 3];
+      }
+      if (!state.choiceMaps[q.id] || state.choiceMaps[q.id].length !== q.choices.length) {
+        const arr = [0, 1, 2, 3];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        state.choiceMaps[q.id] = arr;
+        saveState();
+      }
+      return state.choiceMaps[q.id];
+    }
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, "0");
+      const s = String(sec % 60).padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    function updateHeaderStats() {
+      const answeredList = Object.values(state.answers);
+      const totalAnswered = answeredList.length;
+      const totalCorrect = answeredList.filter(a => a.isCorrect).length;
+      const rate = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+      document.getElementById("scoreBadge").textContent = `正答: ${totalCorrect} / ${totalAnswered} (${rate}%)`;
+      document.getElementById("timerBadge").textContent = `経過: ${formatTime(state.elapsedSec)}`;
+    }
+
+    function renderPalette(filteredIds) {
+      const grid = document.getElementById("paletteGrid");
+      grid.innerHTML = "";
+
+      const listToShow = filteredIds.length > 0 ? filteredIds : state.order;
+      listToShow.forEach((id, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "pal-btn";
+        btn.textContent = String(id).padStart(2, "0");
+        const ans = state.answers[id];
+        if (ans) {
+          btn.classList.add(ans.isCorrect ? "p-correct" : "p-incorrect");
+        }
+        if (state.flagged[id]) {
+          btn.classList.add("p-flagged");
+        }
+        if (filteredIds.length > 0 && idx === state.currentIdx) {
+          btn.classList.add("current");
+        }
+        btn.addEventListener("click", () => {
+          document.getElementById("summaryView").style.display = "none";
+          if (filteredIds.length > 0) {
+            state.currentIdx = idx;
+          } else {
+            state.categoryFilter = "ALL";
+            state.subsetFilter = "ALL";
+            document.getElementById("categoryFilter").value = "ALL";
+            document.getElementById("subsetFilter").value = "ALL";
+            const newFiltered = getFilteredIds();
+            state.currentIdx = Math.max(0, newFiltered.indexOf(id));
+          }
+          saveState();
+          render();
+        });
+        grid.appendChild(btn);
+      });
+
+      const answeredCount = Object.keys(state.answers).length;
+      const flaggedCount = Object.values(state.flagged).filter(Boolean).length;
+      const wrongCount = Object.values(state.answers).filter(a => !a.isCorrect).length;
+
+      document.getElementById("miniStats").innerHTML = `
+        <div>解答済み: <strong>${answeredCount}</strong> / ${QUESTIONS.length} 問</div>
+        <div>誤答数: <strong>${wrongCount}</strong> 問 / 要復習フラグ: <strong>${flaggedCount}</strong> 問</div>
+      `;
+    }
+
+    function renderQuestion() {
+      const card = document.getElementById("questionCard");
+      const filteredIds = getFilteredIds();
+
+      if (filteredIds.length === 0) {
+        card.innerHTML = `
+          <div class="empty-state">
+            <p style="font-size:1rem; font-weight:600; margin-bottom:12px;">現在の条件に一致する問題はありません。</p>
+            <button class="btn-primary" id="clearFilterBtn">フィルタを解除して全50問を表示</button>
+          </div>
+        `;
+        document.getElementById("clearFilterBtn").addEventListener("click", () => {
+          state.categoryFilter = "ALL";
+          state.subsetFilter = "ALL";
+          state.currentIdx = 0;
+          document.getElementById("categoryFilter").value = "ALL";
+          document.getElementById("subsetFilter").value = "ALL";
+          saveState();
+          render();
+        });
+        renderPalette([]);
+        return;
+      }
+
+      if (state.currentIdx >= filteredIds.length) {
+        state.currentIdx = 0;
+      }
+
+      const qId = filteredIds[state.currentIdx];
+      const q = QUESTIONS.find(item => item.id === qId);
+      const ans = state.answers[q.id];
+      const isFlagged = !!state.flagged[q.id];
+      const choiceMap = getChoiceMap(q);
+      const labels = ["A", "B", "C", "D"];
+
+      let choicesHtml = "";
+      choiceMap.forEach((origIdx, dispIdx) => {
+        let cls = "choice-btn";
+        if (ans) {
+          if (origIdx === q.answer) {
+            cls += " correct";
+          } else if (origIdx === ans.selected && !ans.isCorrect) {
+            cls += " incorrect";
+          }
+        }
+        choicesHtml += `
+          <button class="${cls}" data-orig-idx="${origIdx}">
+            <span class="choice-key">${labels[dispIdx]}</span>
+            <span>${escapeHtml(q.choices[origIdx])}</span>
+          </button>
+        `;
+      });
+
+      const showExplanation = !!ans && state.autoReveal;
+      const correctDispIdx = choiceMap.indexOf(q.answer);
+      const correctLabel = labels[correctDispIdx] || "";
+
+      let expHtml = "";
+      if (ans && !state.autoReveal) {
+        expHtml = `
+          <div class="explanation-box">
+            <p class="exp-title">解答を記録しました（解説非表示モード中）</p>
+            <button id="showSingleExpBtn">この問題の解説を表示</button>
+          </div>
+        `;
+      } else if (showExplanation) {
+        const boxCls = ans.isCorrect ? "is-correct" : "is-incorrect";
+        const verdict = ans.isCorrect ? "○ 正解です！" : `× 不正解（正解：${correctLabel}）`;
+        expHtml = `
+          <div class="explanation-box ${boxCls}" id="expBox">
+            <p class="exp-title">${verdict}</p>
+            <p class="exp-body">${escapeHtml(q.explanation)}</p>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="q-meta">
+          <div class="q-tags">
+            <span class="q-num">第${q.id}問</span>
+            <span class="q-cat">${escapeHtml(q.category)}</span>
+            <span style="font-size:0.82rem; color:var(--muted);">(${state.currentIdx + 1} / ${filteredIds.length}件表示中)</span>
+          </div>
+          <button class="flag-btn ${isFlagged ? "flagged" : ""}" id="flagBtn">
+            ${isFlagged ? "★ 要復習フラグ済" : "☆ 要復習フラグ"}
+          </button>
+        </div>
+
+        <p class="q-stem">${escapeHtml(q.stem)}</p>
+
+        <div class="choices" id="choicesContainer">
+          ${choicesHtml}
+        </div>
+
+        <div id="explanationArea">${expHtml}</div>
+
+        <div class="q-nav">
+          <button id="prevBtn" ${state.currentIdx === 0 ? "disabled" : ""}>← 前の問題</button>
+          <div style="display:flex; gap:8px;">
+            ${ans ? `<button id="clearAnsBtn">この問題の解答を消す</button>` : ""}
+            <button class="btn-primary" id="nextBtn" ${state.currentIdx >= filteredIds.length - 1 ? "disabled" : ""}>次の問題 →</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("flagBtn").addEventListener("click", () => {
+        state.flagged[q.id] = !state.flagged[q.id];
+        if (!state.flagged[q.id]) delete state.flagged[q.id];
+        saveState();
+        render();
+      });
+
+      document.querySelectorAll("#choicesContainer .choice-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const selectedOrig = Number(btn.getAttribute("data-orig-idx"));
+          state.answers[q.id] = {
+            selected: selectedOrig,
+            isCorrect: selectedOrig === q.answer
+          };
+          saveState();
+          render();
+        });
+      });
+
+      const showSingleExpBtn = document.getElementById("showSingleExpBtn");
+      if (showSingleExpBtn) {
+        showSingleExpBtn.addEventListener("click", () => {
+          const boxCls = ans.isCorrect ? "is-correct" : "is-incorrect";
+          const verdict = ans.isCorrect ? "○ 正解です！" : `× 不正解（正解：${correctLabel}）`;
+          document.getElementById("explanationArea").innerHTML = `
+            <div class="explanation-box ${boxCls}">
+              <p class="exp-title">${verdict}</p>
+              <p class="exp-body">${escapeHtml(q.explanation)}</p>
+            </div>
+          `;
+        });
+      }
+
+      const clearAnsBtn = document.getElementById("clearAnsBtn");
+      if (clearAnsBtn) {
+        clearAnsBtn.addEventListener("click", () => {
+          delete state.answers[q.id];
+          saveState();
+          render();
+        });
+      }
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        if (state.currentIdx > 0) {
+          state.currentIdx -= 1;
+          saveState();
+          render();
+        }
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        if (state.currentIdx < filteredIds.length - 1) {
+          state.currentIdx += 1;
+          saveState();
+          render();
+        }
+      });
+
+      renderPalette(filteredIds);
+    }
+
+    function renderSummary() {
+      const categories = [
+        "顧客管理（CDD/EDD）",
+        "取引モニタリング・分析",
+        "疑わしい取引の届出（STR）",
+        "金融制裁・海外送金・暗号資産",
+        "内部管理態勢・3線ディフェンス"
+      ];
+
+      let rows = "";
+      categories.forEach(cat => {
+        const qs = QUESTIONS.filter(q => q.category === cat);
+        const total = qs.length;
+        let answered = 0;
+        let correct = 0;
+        qs.forEach(q => {
+          const a = state.answers[q.id];
+          if (a) {
+            answered += 1;
+            if (a.isCorrect) correct += 1;
+          }
+        });
+        const pct = answered > 0 ? `${Math.round((correct / answered) * 100)}%` : "-";
+        rows += `
+          <tr>
+            <td><strong>${escapeHtml(cat)}</strong></td>
+            <td>${answered} / ${total}</td>
+            <td>${correct} / ${answered}</td>
+            <td>${pct}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("summaryContent").innerHTML = `
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>分野</th>
+              <th>解答数</th>
+              <th>正答数（解答済対比）</th>
+              <th>正答率</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function render() {
+      updateHeaderStats();
+      renderQuestion();
+      renderSummary();
+    }
+
+    // Event bindings
+    document.getElementById("categoryFilter").addEventListener("change", e => {
+      state.categoryFilter = e.target.value;
+      state.currentIdx = 0;
+      saveState();
+      render();
+    });
+
+    document.getElementById("subsetFilter").addEventListener("change", e => {
+      state.subsetFilter = e.target.value;
+      state.currentIdx = 0;
+      saveState();
+      render();
+    });
+
+    document.getElementById("shuffleBtn").addEventListener("click", () => {
+      const arr = [...state.order];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      state.order = arr;
+      state.currentIdx = 0;
+      saveState();
+      render();
+    });
+
+    document.getElementById("autoRevealCheck").addEventListener("change", e => {
+      state.autoReveal = e.target.checked;
+      saveState();
+      render();
+    });
+
+    document.getElementById("shuffleChoicesCheck").addEventListener("change", e => {
+      state.shuffleChoices = e.target.checked;
+      state.choiceMaps = {};
+      saveState();
+      render();
+    });
+
+    document.getElementById("toggleSummaryBtn").addEventListener("click", () => {
+      const el = document.getElementById("summaryView");
+      const willShow = el.style.display === "none";
+      renderSummary();
+      el.style.display = willShow ? "block" : "none";
+    });
+
+    document.getElementById("closeSummaryBtn").addEventListener("click", () => {
+      document.getElementById("summaryView").style.display = "none";
+    });
+
+    document.getElementById("retryWrongBtn").addEventListener("click", () => {
+      state.categoryFilter = "ALL";
+      state.subsetFilter = "WRONG";
+      state.currentIdx = 0;
+      document.getElementById("categoryFilter").value = "ALL";
+      document.getElementById("subsetFilter").value = "WRONG";
+      document.getElementById("summaryView").style.display = "none";
+      saveState();
+      render();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("解答履歴・フラグ・経過時間をすべてリセットしますか？")) return;
+      state.answers = {};
+      state.flagged = {};
+      state.choiceMaps = {};
+      state.currentIdx = 0;
+      state.elapsedSec = 0;
+      saveState();
+      render();
+    });
+
+    setInterval(() => {
+      state.elapsedSec += 1;
+      updateHeaderStats();
+      if (state.elapsedSec % 10 === 0) {
+        saveState();
+      }
+    }, 1000);
+
+    // Initialize UI controls from state
+    loadState();
+    document.getElementById("categoryFilter").value = state.categoryFilter;
+    document.getElementById("subsetFilter").value = state.subsetFilter;
+    document.getElementById("autoRevealCheck").checked = state.autoReveal;
+    document.getElementById("shuffleChoicesCheck").checked = state.shuffleChoices;
+    render();
+  </script>
+</body>
+</html>
